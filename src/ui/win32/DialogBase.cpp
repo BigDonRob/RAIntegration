@@ -1,5 +1,5 @@
 #include "DialogBase.hh"
-
+#include "ui\win32\ThemeProvider.hh"
 #include "ui\win32\bindings\ControlBinding.hh"
 #include "ui\win32\bindings\GridBinding.hh"
 #include "ui\win32\bindings\NumericUpDownBinding.hh"
@@ -460,6 +460,34 @@ INT_PTR CALLBACK DialogBase::DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPA
             return 0;
         }
 
+        case WM_CTLCOLORDLG:
+        case WM_CTLCOLORSTATIC:
+        {
+            HDC hDC;
+            GSL_SUPPRESS_TYPE1 hDC = reinterpret_cast<HDC>(wParam);
+            SetTextColor(hDC, COLOR_THEME_TEXT);
+            SetBkColor(hDC, COLOR_THEME_BACKGROUND);
+            return reinterpret_cast<INT_PTR>(GetBackgroundBrush());
+        }
+
+        case WM_CTLCOLOREDIT:
+        {
+            HDC hDC;
+            GSL_SUPPRESS_TYPE1 hDC = reinterpret_cast<HDC>(wParam);
+            SetTextColor(hDC, COLOR_THEME_TEXT);
+            SetBkColor(hDC, COLOR_THEME_CONTROL);
+            return reinterpret_cast<INT_PTR>(GetControlBrush());
+        }
+
+        case WM_CTLCOLORLISTBOX:
+        {
+            HDC hDC;
+            GSL_SUPPRESS_TYPE1 hDC = reinterpret_cast<HDC>(wParam);
+            SetTextColor(hDC, COLOR_THEME_TEXT);
+            SetBkColor(hDC, COLOR_THEME_CONTROL);
+            return reinterpret_cast<INT_PTR>(GetControlBrush());
+        }
+        
         case WM_QUEUED_ACTION:
         {
             std::function<void()> fAction = nullptr;
